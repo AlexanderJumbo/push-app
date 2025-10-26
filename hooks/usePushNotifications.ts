@@ -1,6 +1,7 @@
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 
 
@@ -101,17 +102,51 @@ async function registerForPushNotificationsAsync() {
     }
 }
 
-
-
+//* Bandera para saber cuando los listeners estan listos, y registrarlos una sola vez
+let areListenersReady = false;
 
 export const usePushNotifications = () => {
+    const [expoPushToken, setExpoPushToken] = useState("");
+    const [notifications, setNotifications] = useState<
+        Notifications.Notification[]
+    >([]);
 
+
+    useEffect(() => {
+
+        if (areListenersReady) return;
+
+        registerForPushNotificationsAsync()
+            .then((token) => setExpoPushToken(token ?? ""))
+            .catch((error: any) => setExpoPushToken(`${error}`));
+    }, []);
+
+    useEffect(() => {
+        //* Evitar el doble registro este mismo efecto
+        if (areListenersReady) return
+        areListenersReady = true
+        const notificationListener = Notifications.addNotificationReceivedListener(
+            (notification) => {
+                setNotifications([notification, ...notifications]);
+            }
+        );
+        const responseListener =
+            Notifications.addNotificationResponseReceivedListener((response) => {
+                console.log(response);
+            });
+        return () => {
+            notificationListener.remove();
+            responseListener.remove();
+        };
+    }, []);
 
 
     return {
         //* Properties
-
+        expoPushToken,
+        notifications,
 
         //* Methods
+        sendPushNotification
     }
 }
