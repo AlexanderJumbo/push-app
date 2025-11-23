@@ -1,0 +1,9 @@
+CREDENCIALES PARA BUILDS EN ANDROID
+
+eas login
+eas build
+eas credentials
+Path to Google Service Account file: aquí colocamos el nombre del archivo generado desde firebase previamente cargado en la raíz de nuestro proyecto.
+
+Crear un app en firebase y bajarse el google-services.json, luego pegar este archivo en la raíz del proyecto
+Colocar en el app.json después del package lo sigt: "googleServicesFile": "./google-services.json"
