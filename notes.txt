@@ -7,3 +7,9 @@ Path to Google Service Account file: aquí colocamos el nombre del archivo gener
 
 Crear un app en firebase y bajarse el google-services.json, luego pegar este archivo en la raíz del proyecto
 Colocar en el app.json después del package lo sigt: "googleServicesFile": "./google-services.json"
+
+Prebuild - Custom Builds
+
+npx expo prebuild
+
+npx expo run:android -d (Para instalar la versión del pre-build que creamos con el comando anterior)
